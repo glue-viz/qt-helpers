@@ -9,7 +9,7 @@ With this module, you can import the ``QtGui`` and ``QtCore`` submodules from
 
 By default, ``qt_helpers`` will first try and import from PyQt4, then PySide.
 To explicitly force which backend package to use, you can set the ``QT_API``
-environment variable to ``pyqt`` or ``pyside``.
+environment variable to ``'pyqt'`` or ``'pyside'``.
 
 Note that when using ``qt_helpers``, the QString API is always set to version
 2.
