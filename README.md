@@ -14,5 +14,5 @@ environment variable to ``'pyqt'`` or ``'pyside'``.
 Note that when using ``qt_helpers``, the QString API is always set to version
 2.
 
-If you want to know which backend is being used, you can use the ``is_pyqt``
-and ``is_pyside`` functions.
+If you want to know which backend is being used, you can use the ``is_pyqt()``
+and ``is_pyside()`` functions.
