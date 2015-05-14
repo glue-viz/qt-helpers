@@ -16,3 +16,13 @@ Note that when using ``qt_helpers``, the QString API is always set to version
 
 If you want to know which backend is being used, you can use the ``is_pyqt()``
 and ``is_pyside()`` functions.
+
+Finally, a convenience ``load_ui(filename)`` function is provided to load Qt
+``.ui`` files, e.g.:
+
+    from qt_helpers import load_ui
+    ui = load_ui('mywidget.ui')
+
+If you define any custom widgets that are used in the ``.ui`` file, you
+should pass them as a list or tuple to ``load_ui`` using the
+``custom_widgets=`` argument.
