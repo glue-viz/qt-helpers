@@ -1,12 +1,14 @@
-""" A Qt API selector that can be used to switch between PyQt and PySide.
+"""
+This module provides a way to import from Python Qt wrappers in a uniform
+way, regardless of whether PySide or PyQt is used.
 
 This file lovingly borrows from the IPython and python_qt_binding project
 
 https://github.com/ipython/ipython/blob/master/IPython/external/qt.py
 https://github.com/ros-visualization/python_qt_binding/
 
-
 See also this discussion
+
 http://qt-project.org/wiki/Differences_Between_PySide_and_PyQt
 
 Do not use this if you need PyQt with the old QString/QVariant API.
@@ -17,7 +19,6 @@ from __future__ import absolute_import, division, print_function
 import os
 import sys
 
-
 __all__ = ['QtCore', 'QtGui', 'is_pyside', 'is_pyqt', 'load_ui']
 
 # Available APIs.
@@ -25,10 +26,12 @@ QT_API_PYQT = 'pyqt'
 QT_API_PYSIDE = 'pyside'
 QT_API = None
 
-# import hook to protect importing of both PySide and PyQt4
-
 
 class ImportDenier(object):
+    """
+    Import hook to protect importing of both PySide and PyQt4.
+    """
+    
     __forbidden = set()
 
     def __init__(self):
@@ -53,18 +56,21 @@ sys.meta_path.append(_import_hook)
 
 
 def prepare_pyqt4():
-    # For PySide compatibility, use the new-style string API that automatically
-    # converts QStrings to Unicode Python strings. Also, automatically unpack
-    # QVariants to their underlying objects.
+    # For PySide compatibility, use the new-style string API that 
+    # automatically converts QStrings to Unicode Python strings. Also, 
+    # automatically unpack QVariants to their underlying objects.
     import sip
     sip.setapi('QString', 2)
     sip.setapi('QVariant', 2)
 
 
 def register_module(module, modlabel):
-    """Register an imported module into a
-    submodule of glue.external.qt. Enables syntax like
-    from qt_helpers.QtGui import QMessageBox
+    """
+    Register an imported module into a submodule of qt_helpers.
+    
+    This enables syntax such as:
+    
+        >>> from qt_helpers.QtGui import QMessageBox
     """
     sys.modules[__name__ + '.' + modlabel] = module
 
@@ -74,9 +80,12 @@ def deny_module(mod_name):
 
 
 def _load_pyqt4():
+
     prepare_pyqt4()
+
     from PyQt4 import QtCore, QtGui, QtTest
     from distutils.version import LooseVersion
+
     if LooseVersion(QtCore.PYQT_VERSION_STR) < LooseVersion('4.8'):
         raise ImportError("Glue Requires PyQt4 >= 4.8")
 
@@ -99,7 +108,9 @@ def _load_pyqt4():
 
 
 def _load_pyside():
+
     from PySide import QtCore, QtGui, __version__, QtTest
+
     if __version__ < '1.0.3':
         # old PySide, fallback on PyQt
         raise ImportError("Glue requires PySide >= 1.0.3")
