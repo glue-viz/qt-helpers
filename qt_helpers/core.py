@@ -117,9 +117,12 @@ def _load_pyside():
 
     deny_module('PyQt4')
 
-loaders = [_load_pyqt4, _load_pyside]
 if os.environ.get('QT_API') == QT_API_PYSIDE:
-    loaders = loaders[::-1]
+    loaders = [_load_pyside]
+elif os.environ.get('QT_API') == QT_API_PYQT:
+    loaders = [_load_pyqt4]
+else:
+    loaders = [_load_pyqt4, _load_pyside]
 
 msgs = []
 
