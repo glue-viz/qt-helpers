@@ -1,0 +1,21 @@
+language: c
+
+os:
+  - linux
+
+env:
+  matrix:
+    - PYTHON_VERSION=2.7 QT=pyqt
+    - PYTHON_VERSION=3.4 QT=pyqt
+    - PYTHON_VERSION=2.7 QT=pyside
+
+before_install:
+  - source continuous-integration/travis/install_conda_$TRAVIS_OS_NAME.sh
+
+install:
+  - conda create --yes -n test python=$PYTHON_VERSION
+  - source activate test
+  - conda install --yes mock pytest $QT
+
+script:
+  - py.test
