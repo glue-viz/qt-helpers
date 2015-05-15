@@ -9,7 +9,11 @@ before_install:
 install:
   - conda create --yes -n test python=2.7
   - source activate test
-  - conda install --yes mock pytest sip pyqt pyside
+  - conda install --yes mock pytest sip pyqt pyside pip coverage
+  - pip install pytest-cov coveralls
 
 script:
-  - py.test
+  - py.test --cov qt_helpers.py
+
+after_success:
+  - coveralls
