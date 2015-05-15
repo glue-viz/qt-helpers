@@ -1,3 +1,7 @@
+
+[![Build Status](https://travis-ci.org/glue-viz/glue.png)](https://travis-ci.org/glue-viz/qt-helpers?branch=master)
+[![Build status](https://ci.appveyor.com/api/projects/status/lmh99ih9rkmq6vf4/branch/master?svg=true)](https://ci.appveyor.com/project/astrofrog/qt-helpers/branch/master)
+
 # qt-helpers
 
 A common front-end to PySide, PyQt4, and PyQt5 (experimental)
