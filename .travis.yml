@@ -15,7 +15,7 @@ before_install:
 install:
   - conda create --yes -n test python=$PYTHON_VERSION
   - source activate test
-  - conda install --yes mock pytest $QT
+  - conda install --yes mock pytest sip $QT
 
 script:
   - py.test
