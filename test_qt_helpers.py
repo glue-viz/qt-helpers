@@ -8,17 +8,11 @@ import qt_helpers as qt
 import pytest
 from mock import MagicMock
 
-
-"""
-We don't run these tests by default, since they import both PyQt4 and
-PySide, and this brings all manner of sadness to subsequent tests.
-
-To run these tests, run `py.test --qtapi`
-"""
+from imp import reload
 
 
-@pytest.mark.skipif("'--qtapi' not in sys.argv")
 class TestQT(object):
+
     def teardown_class(cls):
         for m in sys.modules.keys():
             if m.startswith('PyQt4') or m.startswith('PySide'):
@@ -26,7 +20,8 @@ class TestQT(object):
 
     def setup_method(self, method):
         qt.deny_module(None)
-        os.environ.pop('QT_API')
+        if 'QT_API' in os.environ:
+            os.environ.pop('QT_API')
 
     def test_defaults_to_qt4(self):
         reload(qt)
