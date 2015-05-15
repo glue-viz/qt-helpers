@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/glue-viz/glue.png)](https://travis-ci.org/glue-viz/qt-helpers?branch=master)
+[![Build Status](https://travis-ci.org/glue-viz/qt-helpers.png)](https://travis-ci.org/glue-viz/qt-helpers?branch=master)
 [![Build status](https://ci.appveyor.com/api/projects/status/lmh99ih9rkmq6vf4/branch/master?svg=true)](https://ci.appveyor.com/project/astrofrog/qt-helpers/branch/master)
 [![Coverage Status](https://coveralls.io/repos/glue-viz/qt-helpers/badge.svg)](https://coveralls.io/r/glue-viz/qt-helpers)
 
