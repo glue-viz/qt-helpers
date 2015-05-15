@@ -5,7 +5,7 @@
 
 # qt-helpers
 
-A common front-end to PySide, PyQt4, and PyQt5 (experimental)
+A common front-end to PySide and PyQt4
 
 With this module, you can import the ``QtGui`` and ``QtCore`` submodules from
 ``qt_helpers``, and it will automatically pick one between PyQt4 and PySide:
