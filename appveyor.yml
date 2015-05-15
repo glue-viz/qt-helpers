@@ -33,7 +33,7 @@ install:
     - "python --version"
 
     # Install specified version of numpy and dependencies
-    - "conda install -q --yes mock pytest sip pyqt pyside"
+    - "conda install -q --yes mock pytest pyqt pyside"
 
 # Not a .NET project, we build SunPy in the install step instead
 build: false
