@@ -33,9 +33,8 @@ class TestQT5(object):
 
     def test_load_ui_qt5(self):
         self._load_qt5()
-        from qt_helpers import load_ui
-        from qt_helpers.QtGui import QApplication
-        qapp = QApplication([''])
+        from qt_helpers import load_ui, get_qapp
+        qpp = get_qapp()
         load_ui('test.ui')
 
     def test_submodule_import_qt5(self):

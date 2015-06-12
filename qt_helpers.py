@@ -241,5 +241,16 @@ def _load_ui_pyqt5(path, parent):
     from PyQt5.uic import loadUi
     return loadUi(path, parent)
 
+
+def get_qapp(icon_path=None):
+    qapp = QtGui.QApplication.instance()
+    if qapp is None:
+        qapp = QtGui.QApplication([''])
+        qapp.setQuitOnLastWindowClosed(True)
+        if icon_path is not None:
+            qapp.setWindowIcon(QIcon(icon_path))
+    return qapp
+
+
 # Now load default Qt
 load_qt()

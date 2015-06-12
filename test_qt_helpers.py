@@ -57,16 +57,14 @@ class TestQT(object):
 
     def test_load_ui_qt4(self):
         self._load_qt4()
-        from qt_helpers import load_ui
-        from qt_helpers.QtGui import QApplication
-        qapp = QApplication([''])
+        from qt_helpers import load_ui, get_qapp
+        qpp = get_qapp()
         load_ui('test.ui')
 
     def test_load_ui_pyside(self):
         self._load_pyside()
-        from qt_helpers import load_ui
-        from qt_helpers.QtGui import QApplication
-        qapp = QApplication([''])
+        from qt_helpers import load_ui, get_qapp
+        qpp = get_qapp()
         load_ui('test.ui')
 
     def test_submodule_import(self):
