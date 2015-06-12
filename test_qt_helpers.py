@@ -8,8 +8,6 @@ import qt_helpers as qt
 import pytest
 from mock import MagicMock
 
-from imp import reload
-
 
 class TestQT(object):
 
@@ -24,20 +22,20 @@ class TestQT(object):
             os.environ.pop('QT_API')
 
     def test_defaults_to_qt4(self):
-        reload(qt)
-        assert qt.QT_API == qt.QT_API_PYQT
+        qt.load_qt()
+        assert qt.QT_API == qt.QT_API_PYQT4
 
     def _load_qt4(self):
-        os.environ['QT_API'] = qt.QT_API_PYQT
-        reload(qt)
+        os.environ['QT_API'] = qt.QT_API_PYQT4
+        qt.load_qt()
 
     def _load_pyside(self):
         os.environ['QT_API'] = qt.QT_API_PYSIDE
-        reload(qt)
+        qt.load_qt()
 
     def test_overridden_with_env(self):
         os.environ['QT_API'] = qt.QT_API_PYSIDE
-        reload(qt)
+        qt.load_qt()
         assert qt.QT_API == qt.QT_API_PYSIDE
 
     def test_main_import(self):
@@ -56,6 +54,20 @@ class TestQT(object):
         from PySide import QtCore as core, QtGui as gui
         assert QtCore is core
         assert QtGui is gui
+
+    def test_load_ui_qt4(self):
+        self._load_qt4()
+        from qt_helpers import load_ui
+        from qt_helpers.QtGui import QApplication
+        qapp = QApplication([''])
+        load_ui('test.ui')
+
+    def test_load_ui_pyside(self):
+        self._load_pyside()
+        from qt_helpers import load_ui
+        from qt_helpers.QtGui import QApplication
+        qapp = QApplication([''])
+        load_ui('test.ui')
 
     def test_submodule_import(self):
         self._load_qt4()
@@ -93,7 +105,7 @@ class TestQT(object):
         try:
             sys.modules['PySide'] = None
             self._load_pyside()
-            assert qt.QT_API == qt.QT_API_PYQT
+            assert qt.QT_API == qt.QT_API_PYQT4
         finally:
             sys.modules['PySide'] = PySide
 
@@ -104,7 +116,7 @@ class TestQT(object):
             sys.modules['PySide'] = None
             sys.modules['PyQt4'] = None
             with pytest.raises(ImportError) as e:
-                reload(qt)
+                qt.load_qt()
         finally:
             sys.modules['PySide'] = PySide
             sys.modules['PyQt4'] = PyQt4

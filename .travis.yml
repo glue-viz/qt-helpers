@@ -3,17 +3,31 @@ language: c
 os:
   - linux
 
+env:
+  matrix:
+    - QT_VER="QT4"
+    - QT_VER="QT5"
+
 before_install:
   - source continuous-integration/travis/install_conda_$TRAVIS_OS_NAME.sh
 
 install:
+
+  # The following is required for pyqt5
+  - conda config --add channels dsdale24
+
   - conda create --yes -n test python=2.7
+
   - source activate test
-  - conda install --yes mock pytest sip pyqt pyside pip coverage
+
+  - if [ $QT_VER == QT4 ]; then conda install --yes mock pytest sip pyqt pyside pip coverage; fi
+  - if [ $QT_VER == QT5 ]; then conda install --yes mock pytest sip pyqt5 pip coverage; fi
+
   - pip install pytest-cov coveralls
 
 script:
-  - py.test --cov qt_helpers.py
+  - if [ $QT_VER == QT4 ]; then py.test --cov qt_helpers.py test_qt_helpers.py; fi
+  - if [ $QT_VER == QT5 ]; then py.test --cov qt_helpers.py test_qt_helpers_qt5.py; fi
 
 after_success:
   - coveralls
