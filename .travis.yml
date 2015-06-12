@@ -9,7 +9,13 @@ env:
     - QT_VER="QT5"
 
 before_install:
+
+  # Set up conda
   - source continuous-integration/travis/install_conda_$TRAVIS_OS_NAME.sh
+
+  # Setup system for headless GUI handling
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
 
 install:
 
