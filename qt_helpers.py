@@ -177,7 +177,7 @@ QtCore = None
 QtGui = None
 
 
-def load_qt():
+def reload_qt():
 
     _forbidden.clear()
 
@@ -258,4 +258,4 @@ def get_qapp(icon_path=None):
 
 
 # Now load default Qt
-load_qt()
+reload_qt()

@@ -22,20 +22,20 @@ class TestQT(object):
             os.environ.pop('QT_API')
 
     def test_defaults_to_qt4(self):
-        qt.load_qt()
+        qt.reload_qt()
         assert qt.QT_API == qt.QT_API_PYQT4
 
     def _load_qt4(self):
         os.environ['QT_API'] = qt.QT_API_PYQT4
-        qt.load_qt()
+        qt.reload_qt()
 
     def _load_pyside(self):
         os.environ['QT_API'] = qt.QT_API_PYSIDE
-        qt.load_qt()
+        qt.reload_qt()
 
     def test_overridden_with_env(self):
         os.environ['QT_API'] = qt.QT_API_PYSIDE
-        qt.load_qt()
+        qt.reload_qt()
         assert qt.QT_API == qt.QT_API_PYSIDE
 
     def test_main_import(self):
@@ -114,7 +114,7 @@ class TestQT(object):
             sys.modules['PySide'] = None
             sys.modules['PyQt4'] = None
             with pytest.raises(ImportError) as e:
-                qt.load_qt()
+                qt.reload_qt()
         finally:
             sys.modules['PySide'] = PySide
             sys.modules['PyQt4'] = PyQt4
