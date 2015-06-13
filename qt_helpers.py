@@ -46,6 +46,7 @@ QT_API_PYQT = QT_API_PYQT4
 
 _forbidden = set()
 
+
 def deny_module(module):
     _forbidden.add(module)
 
@@ -68,6 +69,7 @@ class ImportDenier(object):
 
 _import_hook = ImportDenier()
 sys.meta_path.append(_import_hook)
+
 
 def prepare_pyqt4():
     # For PySide compatibility, use the new-style string API that
@@ -174,6 +176,7 @@ def _load_pyside():
 QtCore = None
 QtGui = None
 
+
 def load_qt():
 
     _forbidden.clear()
@@ -182,9 +185,9 @@ def load_qt():
     global QtGui
 
     if os.environ.get('QT_API') == QT_API_PYQT5:
-        loaders = [ _load_pyqt5]
+        loaders = [_load_pyqt5]
     elif os.environ.get('QT_API') == QT_API_PYSIDE:
-        loaders = [ _load_pyside, _load_pyqt4]
+        loaders = [_load_pyside, _load_pyqt4]
     else:
         loaders = [_load_pyqt4, _load_pyside]
 
@@ -207,6 +210,7 @@ def load_qt():
         raise ImportError("Could not find a suitable QT installation."
                           " Encountered the following errors: %s" %
                           '\n'.join(msgs))
+
 
 def load_ui(path, parent=None, custom_widgets=None):
     if is_pyside():
