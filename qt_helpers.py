@@ -135,9 +135,10 @@ def _load_pyqt5():
 
     # In PyQt5, some widgets such as QMessageBox have moved from QtGui to
     # QWidgets so we add backward-compatibility hooks here for now
-    QtGui.QMessageBox = QtWidgets.QMessageBox
-    QtGui.QFileDialog = QtWidgets.QFileDialog
-    QtGui.QApplication = QtWidgets.QApplication
+    for widget in dir(QtWidgets):
+        if widget.startswith('Q'):
+            setattr(QtGui, widget, getattr(QtWidgets, widget))
+    QtGui.QItemSelectionModel = QtCore.QItemSelectionModel
 
     register_module(QtCore, 'QtCore')
     register_module(QtGui, 'QtGui')
