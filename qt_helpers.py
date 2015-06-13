@@ -42,6 +42,7 @@ def is_pyqt5():
 
 # Backward-compatibility
 is_pyqt = is_pyqt4
+QT_API_PYQT = QT_API_PYQT4
 
 _forbidden = set()
 
