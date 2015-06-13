@@ -29,6 +29,10 @@ install:
   - if [ $QT_VER == QT4 ]; then conda install --yes mock pytest sip pyqt pyside pip coverage; fi
   - if [ $QT_VER == QT5 ]; then conda install --yes mock pytest sip pyqt5 pip coverage; fi
 
+  # The following are required by coveralls so we install them with conda to
+  # save time
+  - conda install --yes pyyaml requests
+
   - pip install pytest-cov coveralls
 
 script:
