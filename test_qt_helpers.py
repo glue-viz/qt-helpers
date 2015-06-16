@@ -59,14 +59,19 @@ class TestQT(object):
     def test_load_ui_qt4(self):
         self._load_qt4()
         from qt_helpers import load_ui, get_qapp
-        qpp = get_qapp()
+        app = get_qapp()
         load_ui('test.ui')
+        app.quit()
+        del app
 
     def test_load_ui_pyside(self):
         self._load_pyside()
         from qt_helpers import load_ui, get_qapp
-        qpp = get_qapp()
+        app = get_qapp()
         load_ui('test.ui')
+        app.exit()
+        app.quit()
+        del app
 
     def test_submodule_import(self):
         self._load_qt4()
@@ -122,10 +127,13 @@ class TestQT(object):
 
     def test_launch_after_reload(self):
 
+        os.environ['QT_API'] = qt.QT_API_PYSIDE
+        qt.reload_qt()
+
         from qt_helpers import QtCore
         from qt_helpers import QtGui
 
-        app = QtGui.QApplication([''])
+        app = qt.get_qapp()
         widget = QtGui.QMessageBox()
         widget.show()
         app.flush()
@@ -140,7 +148,7 @@ class TestQT(object):
         from qt_helpers import QtCore
         from qt_helpers import QtGui
 
-        app = QtGui.QApplication([''])
+        app = qt.get_qapp()
         widget = QtGui.QMessageBox()
         widget.show()
         app.flush()
@@ -155,7 +163,7 @@ class TestQT(object):
         from qt_helpers import QtCore
         from qt_helpers import QtGui
 
-        app = QtGui.QApplication([''])
+        app = qt.get_qapp()
         widget = QtGui.QMessageBox()
         widget.show()
         app.flush()
