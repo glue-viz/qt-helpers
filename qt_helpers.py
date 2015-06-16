@@ -179,6 +179,15 @@ QtGui = None
 
 
 def reload_qt():
+    """
+    Reload the Qt bindings.
+
+    If the QT_API environment variable has been updated, this will load the
+    new Qt bindings given by this variable. This should be used instead of
+    the build-in ``reload`` function because the latter can in some cases
+    cause issues with the ImportDenier (which prevents users from importing
+    e.g. PySide if PyQt4 is loaded).
+    """
 
     _forbidden.clear()
 
@@ -196,7 +205,6 @@ def reload_qt():
 
     # acutally do the loading
     for loader in loaders:
-        print(loader)
         try:
             loader()
             # we set this env var, since IPython also looks for it
