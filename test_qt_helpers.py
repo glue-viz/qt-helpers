@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import os
 import sys
+import time
 
 import qt_helpers as qt
 
@@ -118,3 +119,48 @@ class TestQT(object):
         finally:
             sys.modules['PySide'] = PySide
             sys.modules['PyQt4'] = PyQt4
+
+    def test_launch_after_reload(self):
+
+        from qt_helpers import QtCore
+        from qt_helpers import QtGui
+
+        app = QtGui.QApplication([''])
+        widget = QtGui.QMessageBox()
+        widget.show()
+        app.flush()
+        time.sleep(0.1)
+        app.quit()
+
+        del app
+
+        os.environ['QT_API'] = qt.QT_API_PYQT4
+        qt.reload_qt()
+
+        from qt_helpers import QtCore
+        from qt_helpers import QtGui
+
+        app = QtGui.QApplication([''])
+        widget = QtGui.QMessageBox()
+        widget.show()
+        app.flush()
+        time.sleep(0.1)
+        app.quit()
+
+        del app
+
+        os.environ['QT_API'] = qt.QT_API_PYSIDE
+        qt.reload_qt()
+
+        from qt_helpers import QtCore
+        from qt_helpers import QtGui
+
+        app = QtGui.QApplication([''])
+        widget = QtGui.QMessageBox()
+        widget.show()
+        app.flush()
+        time.sleep(0.1)
+        app.quit()
+
+        del app
+
