@@ -1,15 +1,50 @@
+# qt-helpers - a common front-end to various Qt modules
+#
+# Copyright (c) 2015, Chris Beaumont and Thomas Robitaille
+#
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the
+#    distribution.
+#  * Neither the name of the Glue project nor the names of its
+#    contributors may be used to endorse or promote products derived
+#    from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+# This file includes code adapted from:
+#
+#   * IPython, which is released under the modified BSD license
+#     (https://github.com/ipython/ipython/blob/master/COPYING.rst)
+#
+#   * python_qt_binding, which is released under the BSD license
+#     (https://pypi.python.org/pypi/python_qt_binding)
+#
+# See also this discussion
+#
+# http://qt-project.org/wiki/Differences_Between_PySide_and_PyQt
+
+
 """
 This module provides a way to import from Python Qt wrappers in a uniform
 way, regardless of whether PySide or PyQt is used.
-
-This file lovingly borrows from the IPython and python_qt_binding project
-
-https://github.com/ipython/ipython/blob/master/IPython/external/qt.py
-https://github.com/ros-visualization/python_qt_binding/
-
-See also this discussion
-
-http://qt-project.org/wiki/Differences_Between_PySide_and_PyQt
 
 Do not use this if you need PyQt with the old QString/QVariant API.
 """
@@ -19,7 +54,8 @@ from __future__ import absolute_import, division, print_function
 import os
 import sys
 
-__all__ = ['QtCore', 'QtGui', 'is_pyside', 'is_pyqt', 'load_ui']
+__all__ = ['QtCore', 'QtGui', 'is_pyside', 'is_pyqt4', 'is_pyqt5', 'load_ui',
+           'QT_API_PYQT4', 'QT_API_PYQT5', 'QT_API_PYSIDE']
 
 # Available APIs.
 QT_API_PYQT4 = 'pyqt'
