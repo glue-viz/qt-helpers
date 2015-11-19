@@ -9,6 +9,7 @@ env:
   global:
     - PIP_DEPENDENCIES='pytest-cov coveralls'
     - CONDA_CHANNELS='astrofrog'
+    - PYTHON_VERSION=2.7
   matrix:
     - QT_VER="QT4" CONDA_DEPENDENCIES='mock pytest pip coverage pyyaml requests pyqt pyside'
     - QT_VER="QT5" CONDA_DEPENDENCIES='mock pytest pip coverage pyyaml requests pyqt5'
