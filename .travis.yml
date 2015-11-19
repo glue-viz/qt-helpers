@@ -3,37 +3,26 @@ language: c
 os:
   - linux
 
+sudo: false
+
 env:
+  global:
+    - PIP_DEPENDENCIES='pytest-cov coveralls'
+    - CONDA_CHANNELS='astrofrog'
+    - PYTHON_VERSION=2.7
   matrix:
-    - QT_VER="QT4"
-    - QT_VER="QT5"
+    - QT_VER="QT4" CONDA_DEPENDENCIES='mock pytest pip coverage pyyaml requests pyqt pyside'
+    - QT_VER="QT5" CONDA_DEPENDENCIES='mock pytest pip coverage pyyaml requests pyqt5'
 
 before_install:
 
-  # Set up conda
-  - source continuous-integration/travis/install_conda_$TRAVIS_OS_NAME.sh
+  # Install ci-helpers and set up conda
+  - git clone git://github.com/astropy/ci-helpers.git
+  - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
 
   # Setup system for headless GUI handling
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
-
-install:
-
-  # The following is required for pyqt5
-  - conda config --add channels dsdale24
-
-  - conda create --yes -n test python=2.7
-
-  - source activate test
-
-  - if [ $QT_VER == QT4 ]; then conda install --yes mock pytest sip pyqt pyside pip coverage; fi
-  - if [ $QT_VER == QT5 ]; then conda install --yes mock pytest sip pyqt5 pip coverage; fi
-
-  # The following are required by coveralls so we install them with conda to
-  # save time
-  - conda install --yes pyyaml requests
-
-  - pip install pytest-cov coveralls
 
 script:
   - if [ $QT_VER == QT4 ]; then py.test --cov qt_helpers.py test_qt_helpers.py; fi
