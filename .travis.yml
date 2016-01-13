@@ -10,12 +10,12 @@ env:
     - PIP_DEPENDENCIES='pytest-cov coveralls'
     - CONDA_CHANNELS='astrofrog'
     - PYTHON_VERSION=2.7
-    - TEST_SWITCH=False
+    - TEST_FILES='test_qt_helpers.py'
   matrix:
     - CONDA_DEPENDENCIES='mock pytest pip coverage pyyaml requests pyside'
     - CONDA_DEPENDENCIES='mock pytest pip coverage pyyaml requests pyqt'
     - CONDA_DEPENDENCIES='mock pytest pip coverage pyyaml requests pyqt5'
-    - CONDA_DEPENDENCIES='mock pytest pip coverage pyyaml requests pyqt pyside' TEST_SWITCH=True
+    - CONDA_DEPENDENCIES='mock pytest pip coverage pyyaml requests pyqt pyside' TEST_FILES='test_qt_helpers.py test_switch.py'
 
 before_install:
 
@@ -28,8 +28,7 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 
 script:
-  - if [ $TEST_SWITCH == True ]; then py.test --cov qt_helpers.py test_switch.py; fi
-  - py.test test_qt_helpers.py
+  - py.test --cov qt_helpers.py $TEST_FILES
 
 after_success:
   - coveralls
