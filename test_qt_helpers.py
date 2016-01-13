@@ -32,6 +32,8 @@ def test_patched_qcombobox():
     widget.setItemData(2, data3)
     widget.addItem(icon1, 'd', data4)
     widget.insertItem(3, icon2, 'e', data5)
+    widget.addItem(icon1, 'f')
+    widget.insertItem(5, icon2, 'g')
 
     widget.show()
 
@@ -47,12 +49,16 @@ def test_patched_qcombobox():
     assert widget.itemData(2) == data3
     assert widget.itemData(3) == data5
     assert widget.itemData(4) == data4
+    assert widget.itemData(5) is None
+    assert widget.itemData(6) is None
 
     assert widget.itemText(0) == 'b'
     assert widget.itemText(1) == 'a'
     assert widget.itemText(2) == 'c'
     assert widget.itemText(3) == 'e'
     assert widget.itemText(4) == 'd'
+    assert widget.itemText(5) == 'g'
+    assert widget.itemText(6) == 'f'
 
 
 def test_main_import():

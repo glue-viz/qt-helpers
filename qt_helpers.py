@@ -329,8 +329,8 @@ def patch_qcombobox():
     _addItem = QtGui.QComboBox.addItem
 
     def addItem(self, *args, **kwargs):
-        if len(args) == 2 or (isinstance(args[0], QtGui.QIcon)
-                              and len(args) == 3):
+        if len(args) == 3 or (not isinstance(args[0], QtGui.QIcon)
+                              and len(args) == 2):
             args, kwargs['userData'] = args[:-1], args[-1]
         if 'userData' in kwargs:
             kwargs['userData'] = userDataWrapper(kwargs['userData'],
@@ -340,8 +340,8 @@ def patch_qcombobox():
     _insertItem = QtGui.QComboBox.insertItem
 
     def insertItem(self, *args, **kwargs):
-        if len(args) == 3 or (isinstance(args[1], QtGui.QIcon)
-                              and len(args) == 4):
+        if len(args) == 4 or (not isinstance(args[1], QtGui.QIcon)
+                              and len(args) == 3):
             args, kwargs['userData'] = args[:-1], args[-1]
         if 'userData' in kwargs:
             kwargs['userData'] = userDataWrapper(kwargs['userData'],
