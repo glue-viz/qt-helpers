@@ -256,6 +256,10 @@ def reload_qt():
                           " Encountered the following errors: %s" %
                           '\n'.join(msgs))
 
+    # We patch this only now, once QtCore and QtGui are defined
+    if is_pyside() or is_pyqt4():
+        patch_qcombobox()
+
 
 def load_ui(path, parent=None, custom_widgets=None):
     if is_pyside():
@@ -306,6 +310,63 @@ def get_qapp(icon_path=None):
         qapp.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps);
 
     return qapp
+
+
+def patch_qcombobox():
+
+    # In PySide, using Python objects as userData in QComboBox causes
+    # Segmentation faults under certain conditions. Even in cases where it
+    # doesn't, findData does not work correctly. Likewise, findData also
+    # does not work correctly with Python objects when using PyQt4. On the
+    # other hand, PyQt5 deals with this case correctly. We therefore patch
+    # QComboBox when using PyQt4 and PySide to avoid issues.
+
+    class userDataWrapper(QtCore.QObject):
+        def __init__(self, data, parent=None):
+            super(userDataWrapper, self).__init__(parent)
+            self.data = data
+
+    _addItem = QtGui.QComboBox.addItem
+
+    def addItem(self, text, userData=None):
+        if userData is not None:
+            userData = userDataWrapper(userData, parent=self)
+        print(userData)
+        _addItem(self, text, userData=userData)
+        print(self.itemData(0))
+
+    _insertItem = QtGui.QComboBox.insertItem
+
+    def insertItem(self, index, text, userData=None):
+        if userData is not None:
+            userData = userDataWrapper(userData, parent=self)
+        _insertItem(self, index, text, userData=userData)
+
+    _setItemData = QtGui.QComboBox.setItemData
+
+    def setItemData(self, index, value, role=QtCore.Qt.UserRole):
+        value = userDataWrapper(value, parent=self)
+        _setItemData(self, index, value, role=role)
+
+    _itemData = QtGui.QComboBox.itemData
+
+    def itemData(self, index, role=QtCore.Qt.UserRole):
+        userData = _itemData(self, index, role=role)
+        if isinstance(userData, userDataWrapper):
+            userData = userData.data
+        return userData
+
+    def findData(self, value):
+        for i in range(self.count()):
+            if self.itemData(i) == value:
+                return i
+        return -1
+
+    QtGui.QComboBox.addItem = addItem
+    QtGui.QComboBox.insertItem = insertItem
+    QtGui.QComboBox.setItemData = setItemData
+    QtGui.QComboBox.itemData = itemData
+    QtGui.QComboBox.findData = findData
 
 
 # Now load default Qt
