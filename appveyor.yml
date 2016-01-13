@@ -10,10 +10,15 @@ environment:
       PYTHON_ARCH: "64" # needs to be set for CMD_IN_ENV to succeed. If a mix
                         # of 32 bit and 64 bit builds are needed, move this
                         # to the matrix section.
-      CONDA_DEPENDENCIES: "mock pytest pyqt pyside"
+      PYTHON_VERSION: "2.7"
+      TEST_FILES: "test_qt_helpers.py"
 
   matrix:
-      - PYTHON_VERSION: "2.7"
+      - CONDA_DEPENDENCIES: "mock pytest pyside"
+      - CONDA_DEPENDENCIES: "mock pytest pyqt"
+      - CONDA_DEPENDENCIES: "mock pytest pyqt pyside"
+        TEST_FILES: "test_qt_helpers.py test_switch.py"
+
 
 platform:
     -x64
@@ -32,5 +37,5 @@ install:
 build: false
 
 test_script:
-  - "%CMD_IN_ENV% py.test test_qt_helpers.py"
+  - "%CMD_IN_ENV% py.test %TEST_FILES%"
 
