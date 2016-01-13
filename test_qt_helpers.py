@@ -1,174 +1,53 @@
-from __future__ import absolute_import, division, print_function
+# Tests common to all Qt packages
 
-import os
-import sys
-import time
-
-import qt_helpers as qt
-
-import pytest
-from mock import MagicMock
+import qt_helpers
 
 
-class TestQT(object):
+def test_patched_qcombobox():
 
-    def teardown_class(cls):
-        for m in sys.modules.keys():
-            if m.startswith('PyQt4') or m.startswith('PySide'):
-                sys.modules.pop(m)
+    # This test ensures that patch_qcombobox works correctly. See the comments
+    # in that function to understand the issue.
 
-    def setup_method(self, method):
-        qt.deny_module(None)
-        if 'QT_API' in os.environ:
-            os.environ.pop('QT_API')
+    # The __getitem__ is needed in order to reproduce the Segmentation Fault
+    class Data(object):
+        def __getitem__(self, item):
+            raise ValueError("Failing")
 
-    def test_defaults_to_qt4(self):
-        qt.reload_qt()
-        assert qt.QT_API == qt.QT_API_PYQT4
+    data1 = Data()
+    data2 = Data()
+    data3 = Data()
+    data4 = Data()
 
-    def _load_qt4(self):
-        os.environ['QT_API'] = qt.QT_API_PYQT4
-        qt.reload_qt()
+    app = qt_helpers.get_qapp()
 
-    def _load_pyside(self):
-        os.environ['QT_API'] = qt.QT_API_PYSIDE
-        qt.reload_qt()
+    widget = qt_helpers.QtGui.QComboBox()
+    widget.addItem('a', data1)
+    widget.insertItem(0, 'b', data2)
+    widget.addItem('c', data1)
+    widget.setItemData(2, data3)
+    widget.show()
 
-    def test_overridden_with_env(self):
-        os.environ['QT_API'] = qt.QT_API_PYSIDE
-        qt.reload_qt()
-        assert qt.QT_API == qt.QT_API_PYSIDE
+    assert widget.findData(data1) == 1
+    assert widget.findData(data2) == 0
+    assert widget.findData(data3) == 2
+    assert widget.findData(data4) == -1
 
-    def test_main_import(self):
-        self._load_qt4()
-        from qt_helpers import QtCore
-        from qt_helpers import QtGui
+    assert widget.itemData(0) == data2
+    assert widget.itemData(1) == data1
+    assert widget.itemData(2) == data3
 
-        from PyQt4 import QtCore as core, QtGui as gui
-        assert QtCore is core
-        assert QtGui is gui
 
-        self._load_pyside()
-        from qt_helpers import QtCore
-        from qt_helpers import QtGui
+def test_main_import():
+    from qt_helpers import QtCore
+    from qt_helpers import QtGui
 
-        from PySide import QtCore as core, QtGui as gui
-        assert QtCore is core
-        assert QtGui is gui
 
-    def test_load_ui_qt4(self):
-        self._load_qt4()
-        from qt_helpers import load_ui, get_qapp
-        app = get_qapp()
-        load_ui('test.ui')
-        app.quit()
-        del app
+def test_submodule_import():
+    from qt_helpers.QtGui import QMessageBox
+    from qt_helpers.QtCore import Qt
 
-    def test_load_ui_pyside(self):
-        self._load_pyside()
-        from qt_helpers import load_ui, get_qapp
-        app = get_qapp()
-        load_ui('test.ui')
-        app.exit()
-        app.quit()
-        del app
 
-    def test_submodule_import(self):
-        self._load_qt4()
-        from qt_helpers.QtGui import QMessageBox
-        from qt_helpers.QtCore import Qt
-        from PyQt4.QtGui import QMessageBox as qmb
-        from PyQt4.QtCore import Qt as _qt
-        assert qmb is QMessageBox
-        assert _qt is Qt
-
-        self._load_pyside()
-        from qt_helpers.QtGui import QMessageBox
-        from qt_helpers.QtCore import Qt
-
-        from PySide.QtGui import QMessageBox as qmb
-        from PySide.QtCore import Qt as _qt
-        assert qmb is QMessageBox
-        assert _qt is Qt
-
-    def test_signal_slot_property(self):
-        self._load_qt4()
-        from qt_helpers.QtCore import Signal, Slot, Property
-
-    def test_qt4_unavailable(self):
-        import PyQt4
-        try:
-            sys.modules['PyQt4'] = None
-            self._load_qt4()
-            assert qt.QT_API == qt.QT_API_PYSIDE
-        finally:
-            sys.modules['PyQt4'] = PyQt4
-
-    def test_pyside_unavailable(self):
-        import PySide
-        try:
-            sys.modules['PySide'] = None
-            self._load_pyside()
-            assert qt.QT_API == qt.QT_API_PYQT4
-        finally:
-            sys.modules['PySide'] = PySide
-
-    def test_both_unavailable(self):
-        import PySide
-        import PyQt4
-        try:
-            sys.modules['PySide'] = None
-            sys.modules['PyQt4'] = None
-            with pytest.raises(ImportError) as e:
-                qt.reload_qt()
-        finally:
-            sys.modules['PySide'] = PySide
-            sys.modules['PyQt4'] = PyQt4
-
-    def test_launch_after_reload(self):
-
-        os.environ['QT_API'] = qt.QT_API_PYSIDE
-        qt.reload_qt()
-
-        from qt_helpers import QtCore
-        from qt_helpers import QtGui
-
-        app = qt.get_qapp()
-        widget = QtGui.QMessageBox()
-        widget.show()
-        app.flush()
-        time.sleep(0.1)
-        app.quit()
-
-        del app
-
-        os.environ['QT_API'] = qt.QT_API_PYQT4
-        qt.reload_qt()
-
-        from qt_helpers import QtCore
-        from qt_helpers import QtGui
-
-        app = qt.get_qapp()
-        widget = QtGui.QMessageBox()
-        widget.show()
-        app.flush()
-        time.sleep(0.1)
-        app.quit()
-
-        del app
-
-        os.environ['QT_API'] = qt.QT_API_PYSIDE
-        qt.reload_qt()
-
-        from qt_helpers import QtCore
-        from qt_helpers import QtGui
-
-        app = qt.get_qapp()
-        widget = QtGui.QMessageBox()
-        widget.show()
-        app.flush()
-        time.sleep(0.1)
-        app.quit()
-
-        del app
-
+def test_load_ui():
+    from qt_helpers import load_ui, get_qapp
+    qpp = get_qapp()
+    load_ui('test.ui')
