@@ -17,6 +17,11 @@ def test_patched_qcombobox():
     data2 = Data()
     data3 = Data()
     data4 = Data()
+    data5 = Data()
+    data6 = Data()
+
+    icon1 = qt_helpers.QtGui.QIcon()
+    icon2 = qt_helpers.QtGui.QIcon()
 
     app = qt_helpers.get_qapp()
 
@@ -25,16 +30,29 @@ def test_patched_qcombobox():
     widget.insertItem(0, 'b', data2)
     widget.addItem('c', data1)
     widget.setItemData(2, data3)
+    widget.addItem(icon1, 'd', data4)
+    widget.insertItem(3, icon2, 'e', data5)
+
     widget.show()
 
     assert widget.findData(data1) == 1
     assert widget.findData(data2) == 0
     assert widget.findData(data3) == 2
-    assert widget.findData(data4) == -1
+    assert widget.findData(data4) == 4
+    assert widget.findData(data5) == 3
+    assert widget.findData(data6) == -1
 
     assert widget.itemData(0) == data2
     assert widget.itemData(1) == data1
     assert widget.itemData(2) == data3
+    assert widget.itemData(3) == data5
+    assert widget.itemData(4) == data4
+
+    assert widget.itemText(0) == 'b'
+    assert widget.itemText(1) == 'a'
+    assert widget.itemText(2) == 'c'
+    assert widget.itemText(3) == 'e'
+    assert widget.itemText(4) == 'd'
 
 
 def test_main_import():
