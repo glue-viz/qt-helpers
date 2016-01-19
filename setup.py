@@ -13,5 +13,5 @@ setup(name='qt-helpers',
                    "Development Status :: 4 - Beta",
                    "Programming Language :: Python",
                    "License :: OSI Approved :: BSD License",
-                  ]
-     )
+      ]
+      )
