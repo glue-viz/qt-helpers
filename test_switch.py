@@ -18,7 +18,7 @@ class TestQT(object):
                 sys.modules.pop(m)
 
     def setup_method(self, method):
-        qt.deny_module(None)
+        qt._import_hook.deny_module(None)
         if 'QT_API' in os.environ:
             os.environ.pop('QT_API')
 
