@@ -225,7 +225,14 @@ def reload_qt():
     e.g. PySide if PyQt4 is loaded).
     """
 
+    # Clear any forbidden modules
     _import_hook._forbidden.clear()
+
+    # Quit app if active
+    global qapp
+    if qapp is not None:
+        qapp.quit()
+        qapp = None
 
     global QtCore
     global QtGui
