@@ -13,12 +13,12 @@ from mock import MagicMock
 class TestQT(object):
 
     def teardown_class(cls):
-        for m in sys.modules.keys():
+        for m in list(sys.modules.keys()):
             if m.startswith('PyQt4') or m.startswith('PySide'):
                 sys.modules.pop(m)
 
     def setup_method(self, method):
-        qt.deny_module(None)
+        qt._import_hook.deny_module(None)
         if 'QT_API' in os.environ:
             os.environ.pop('QT_API')
 
@@ -62,16 +62,13 @@ class TestQT(object):
         app = get_qapp()
         load_ui('test.ui')
         app.quit()
-        del app
 
     def test_load_ui_pyside(self):
         self._load_pyside()
         from qt_helpers import load_ui, get_qapp
         app = get_qapp()
         load_ui('test.ui')
-        app.exit()
         app.quit()
-        del app
 
     def test_submodule_import(self):
         self._load_qt4()
@@ -140,8 +137,6 @@ class TestQT(object):
         time.sleep(0.1)
         app.quit()
 
-        del app
-
         os.environ['QT_API'] = qt.QT_API_PYQT4
         qt.reload_qt()
 
@@ -155,8 +150,6 @@ class TestQT(object):
         time.sleep(0.1)
         app.quit()
 
-        del app
-
         os.environ['QT_API'] = qt.QT_API_PYSIDE
         qt.reload_qt()
 
@@ -169,5 +162,3 @@ class TestQT(object):
         app.flush()
         time.sleep(0.1)
         app.quit()
-
-        del app
